@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="progress-title">Progress</h2>
+
+<div class="progress-wrapper">
+    {% set progress = (total_runs / goal) if goal > 0 else 0 %}
+    {% set min_width = 22.8 %}
+    {% set max_width = 97.5 %}
+    {% set width = min_width + progress * (max_width - min_width) %}
+
+    <!-- Number text (over the bong) -->
+    <div class="progress-text">
+        {{ total_runs }} / {{ goal }} meters
+    </div>
+
+    <!-- Beer bong progress -->
+    <div class="beer-bong-container">
+        <!-- Empty bong (always visible) -->
+        <img src="{{ url_for('static', filename='images/bong_empty.png') }}" class="bong">
+
+        <!-- Filled bong (clipped between min and max) -->
+        <div class="bong-fill-mask" style="width: {{ width }}%;">
+            <img src="{{ url_for('static', filename='images/bong_filled.png') }}" class="bong">
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Leaderboard</h2>
+<table id="leaderboard">
+    <thead>
+        <tr>
+            <th data-type="string">Username</th>
+            <th data-type="number">Meters</th>
+            <th data-type="number">Best Time (s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in leaderboard %}
+        <tr>
+            <td>
+                <a href="{{ url_for('profile', user_id=row.user_id) }}">
+                    {{ row.username }}
+                </a>
+            </td>
+            <td>{{ row.runs_count }}</td>
+            <td>{{ "%.2f"|format(row.best_time) if row.best_time else "-" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    #leaderboard th {
+        cursor: pointer;
+        background: #f9f9f9;
+        position: relative;
+        user-select: none;
+        padding-right: 20px; /* leave room for arrow */
+    }
+
+    #leaderboard th:hover {
+        background: #eee;
+    }
+
+    /* Sort indicator arrows */
+    #leaderboard th::after {
+        content: "⇅";
+        position: absolute;
+        right: 6px;
+        font-size: 0.8em;
+        color: #aaa;
+    }
+
+    #leaderboard th[data-order="asc"]::after {
+        content: "↑";
+        color: #333;
+    }
+
+    #leaderboard th[data-order="desc"]::after {
+        content: "↓";
+        color: #333;
+    }
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const table = document.getElementById("leaderboard");
+    const headers = table.querySelectorAll("th");
+
+    headers.forEach((header, index) => {
+        header.addEventListener("click", () => {
+            const tbody = table.querySelector("tbody");
+            const rows = Array.from(tbody.querySelectorAll("tr"));
+            const type = header.getAttribute("data-type") || "string";
+            const currentOrder = header.dataset.order || "asc";
+
+            // Sort rows
+            rows.sort((a, b) => {
+                let aText = a.children[index].innerText.trim();
+                let bText = b.children[index].innerText.trim();
+
+                if (type === "number") {
+                    aText = aText === "-" ? Infinity : parseFloat(aText);
+                    bText = bText === "-" ? Infinity : parseFloat(bText);
+                }
+
+                if (aText < bText) return currentOrder === "asc" ? -1 : 1;
+                if (aText > bText) return currentOrder === "asc" ? 1 : -1;
+                return 0;
+            });
+
+            // Toggle order for next click
+            header.dataset.order = currentOrder === "asc" ? "desc" : "asc";
+
+            // Remove sort indicators from other headers
+            headers.forEach(h => {
+                if (h !== header) h.removeAttribute("data-order");
+            });
+
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        });
+    });
+});
+</script>
+{% endblock %}

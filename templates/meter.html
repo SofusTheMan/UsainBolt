@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Meter by {{ run.username }}</h2>
+<video controls>
+    <source src="{{ url_for('video', run_id=run.run_id) }}" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+<p>Time: {{ "%.2f"|format(run.time_seconds) }} seconds</p>
+<p>Date: {{ run.run_date.strftime("%Y-%m-%d %H:%M") }}</p>
+{% endblock %}

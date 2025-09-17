@@ -1,0 +1,47 @@
+.progress-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.progress-text {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Container */
+.beer-bong-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Images (empty + filled) */
+.bong {
+    display: block;
+    max-width: 800px;   /* adjust as needed */
+}
+
+/* Fill mask (controls how much of filled bong is visible) */
+.bong-fill-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: hidden;  /* hide the rest of the filled image */
+}
+
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+header { background: #ffcc00; padding: 20px; text-align: center; font-size: 2em; font-weight: bold; }
+nav { display: flex; justify-content: center; gap: 20px; margin: 10px 0; }
+nav a { text-decoration: none; color: #333; padding: 8px 16px; background: #eee; border-radius: 5px; }
+nav a:hover { background: #ddd; }
+.container { max-width: 900px; margin: 20px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+.box-grid { display: flex; gap: 20px; margin-top: 20px; }
+.box { flex: 1; padding: 20px; background: #ffeb99; text-align: center; border-radius: 10px; cursor: pointer; transition: transform 0.2s; }
+.box:hover { transform: scale(1.05); }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { padding: 10px; border-bottom: 1px solid #ccc; text-align: left; }
+.progress-container { background: #ddd; border-radius: 20px; margin-top: 20px; height: 30px; width: 100%; }
+.progress-bar { height: 100%; background: #4caf50; text-align: center; color: white; line-height: 30px; border-radius: 20px; }
+input, select, button { padding: 10px; margin-top: 10px; width: 100%; border-radius: 5px; border: 1px solid #ccc; }
+video { max-width: 100%; border-radius: 10px; }

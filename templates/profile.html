@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ user.username }}'s Profile</h2>
+<p>Total Meters: {{ runs|length }}</p>
+
+<h3>History</h3>
+<table>
+    <tr>
+        <th>Time (s)</th>
+        <th>Date</th>
+        <th>Video</th>
+    </tr>
+    {% for run in runs %}
+    <tr>
+        <td>{{ "%.2f"|format(run.time_seconds) }}</td>
+        <td>{{ run.run_date.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td><a href="{{ url_for('meter', run_id=run.run_id) }}">View</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
