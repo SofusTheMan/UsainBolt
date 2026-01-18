@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit User 👤</h2>
+
+<div style="text-align: center; margin: 20px 0;">
+    <img src="{{ url_for('profile_picture', user_id=user.user_id) }}" 
+         alt="{{ user.username }}" 
+         style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    <label for="username">Username:</label>
+    <input type="text" name="username" value="{{ user.username }}" required>
+    
+    <hr style="margin: 20px 0;">
+    
+    <label for="profile_picture">Change Profile Picture:</label>
+    <input type="file" name="profile_picture" accept="image/*">
+    <p style="font-size: 0.9em; color: #666;">Leave empty to keep current picture</p>
+    
+    <label>
+        <input type="checkbox" name="remove_picture" value="yes">
+        Remove current profile picture
+    </label>
+    
+    <button type="submit">Save ✅</button>
+</form>
+
+<a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+{% endblock %}

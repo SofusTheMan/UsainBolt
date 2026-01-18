@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Profile Picture</h2>
+
+<div style="text-align: center; margin: 20px 0;">
+    <img src="{{ url_for('profile_picture', user_id=user.user_id) }}" 
+         alt="{{ user.username }}" 
+         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+    <p><strong>{{ user.username }}</strong></p>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    <label for="profile_picture">Choose New Profile Picture:</label>
+    <input type="file" name="profile_picture" accept="image/*" required>
+    
+    <div style="margin-top: 20px;">
+        <button type="submit">💾 Upload Picture</button>
+        <a href="{{ url_for('profile', user_id=user.user_id) }}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Run 🏃</h2>
+
+<form id="editRunForm" method="POST" enctype="multipart/form-data">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" list="usernames" value="{{ run.username }}" autocomplete="off" required>
+    <datalist id="usernames">
+        {% for user in users %}
+        <option value="{{ user.username }}">
+        {% endfor %}
+    </datalist>
+    <p style="font-size: 0.9em; color: #666;">Change this to assign the run to a different user</p>
+
+    <label for="description">Description:</label>
+    <input type="text" name="description" value="{{ run.description }}">
+
+    <label for="time_seconds">Time (s):</label>
+    <input type="number" step="0.01" name="time_seconds" value="{{ run.time_seconds }}" required>
+    
+    <hr style="margin: 20px 0;">
+    
+    <label for="video">Change Video:</label>
+    <input type="file" name="video" accept="video/*">
+    <p style="font-size: 0.9em; color: #666;">Leave empty to keep current video</p>
+    {% if run.video_data %}
+    <p><a href="{{ url_for('video', run_id=run.run_id) }}" target="_blank">View current video</a></p>
+    {% endif %}
+
+    <button type="submit">Save ✅</button>
+</form>
+<a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+
+<script>
+    const usernameInput = document.getElementById("username");
+    const originalUsername = "{{ run.username }}".toLowerCase();
+    
+    // Collect existing usernames (from datalist)
+    const existingNames = Array.from(document.querySelectorAll("#usernames option"))
+        .map(opt => opt.value.toLowerCase());
+
+    document.getElementById("editRunForm").addEventListener("submit", function(event) {
+        const typedName = usernameInput.value.trim().toLowerCase();
+
+        // If username changed and it's a new user
+        if (typedName !== originalUsername && !existingNames.includes(typedName)) {
+            const confirmNew = confirm(
+                `"${usernameInput.value}" is a new user. Are you sure you want to create a new profile and assign this run to them?`
+            );
+            if (!confirmNew) {
+                event.preventDefault();
+                usernameInput.focus();
+            }
+        }
+    });
+</script>
+{% endblock %}

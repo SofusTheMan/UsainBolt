@@ -17,7 +17,7 @@
             </a>
         </td>
         <td>{{ "%.2f"|format(run.time_seconds) }}</td>
-        <td>{{ run.run_date.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>{{ run.run_date.strftime("%d. %b %Y %H:%M") }}</td>
         <td><a href="{{ url_for('meter', run_id=run.run_id) }}">View</a></td>
     </tr>
     {% endfor %}

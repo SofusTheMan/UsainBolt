@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard ⚙️</h2>
+
+<h3>👤 Users</h3>
+<table border="1">
+    <tr>
+        <th>User ID</th>
+        <th>Username</th>
+        <th>Actions</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user.user_id }}</td>
+        <td>{{ user.username }}</td>
+        <td>
+            <form action="{{ url_for('delete_user', user_id=user.user_id) }}" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Delete user {{ user.username }}? This also deletes runs!')">🗑️ Delete</button>
+            </form>
+            <form action="{{ url_for('edit_user', user_id=user.user_id) }}" method="GET" style="display:inline;">
+                <button type="submit">✏️ Edit</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>🏃 Runs</h3>
+<table border="1">
+    <tr>
+        <th>Run ID</th>
+        <th>User ID</th>
+        <th>Description</th>
+        <th>Time (s)</th>
+        <th>Actions</th>
+    </tr>
+    {% for run in runs %}
+    <tr>
+        <td>{{ run.run_id }}</td>
+        <td>{{ run.user_id }}</td>
+        <td>{{ run.description }}</td>
+        <td>{{ run.time_seconds }}</td>
+        <td>
+            <form action="{{ url_for('delete_run', run_id=run.run_id) }}" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Delete run #{{ run.run_id }}?')">🗑️ Delete</button>
+            </form>
+            <form action="{{ url_for('edit_run', run_id=run.run_id) }}" method="GET" style="display:inline;">
+                <button type="submit">✏️ Edit</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

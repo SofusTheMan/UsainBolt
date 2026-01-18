@@ -20,26 +20,50 @@
     <label for="video">Video File:</label>
     <input type="file" name="video" accept="video/*" required>
 
+    <!-- Profile picture field - only shows for new users -->
+    <div id="profilePictureSection" style="display: none;">
+        <hr>
+        <p><strong>New User Detected!</strong></p>
+        <label for="profile_picture">Profile Picture (optional):</label>
+        <input type="file" name="profile_picture" accept="image/*">
+        <p style="font-size: 0.9em; color: #666;">You can add or change this later from your profile page.</p>
+    </div>
+
     <button type="submit">Upload</button>
 </form>
 
 <script>
-    document.getElementById("uploadForm").addEventListener("submit", function(event) {
-        const input = document.getElementById("username");
-        const typedName = input.value.trim().toLowerCase();
+    const usernameInput = document.getElementById("username");
+    const profilePictureSection = document.getElementById("profilePictureSection");
+    
+    // Collect existing usernames (from datalist)
+    const existingNames = Array.from(document.querySelectorAll("#usernames option"))
+        .map(opt => opt.value.toLowerCase());
 
-        // collect existing usernames (from datalist)
-        const existingNames = Array.from(document.querySelectorAll("#usernames option"))
-            .map(opt => opt.value.toLowerCase());
+    // Check username as user types
+    usernameInput.addEventListener("input", function() {
+        const typedName = usernameInput.value.trim().toLowerCase();
+        
+        if (typedName && !existingNames.includes(typedName)) {
+            // Show profile picture field for new users
+            profilePictureSection.style.display = "block";
+        } else {
+            // Hide it for existing users
+            profilePictureSection.style.display = "none";
+        }
+    });
+
+    document.getElementById("uploadForm").addEventListener("submit", function(event) {
+        const typedName = usernameInput.value.trim().toLowerCase();
 
         if (!existingNames.includes(typedName)) {
             const confirmNew = confirm(
-                `"${input.value}" is a new user. Did you mean to create a new user?`
+                `"${usernameInput.value}" is a new user. Did you mean to create a new user?`
             );
             if (!confirmNew) {
                 // stop form submission so the user can change it
                 event.preventDefault();
-                input.focus();
+                usernameInput.focus();
             }
         }
     });

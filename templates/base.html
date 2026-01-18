@@ -12,9 +12,41 @@
         <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
         <a href="{{ url_for('history') }}">History</a>
         <a href="{{ url_for('upload') }}">Upload</a>
+        <a href="{{ url_for('info') }}">Info</a>
+        {% if session.get("admin_logged_in") %}
+            <a href="{{ url_for('admin_logout') }}">Logout 🔒</a>
+        {% else %}
+            <a href="{{ url_for('admin_login') }}">Admin Login 🔒</a>
+        {% endif %}
     </nav>
     <div class="container">
         {% block content %}{% endblock %}
     </div>
 </body>
+<!-- In your base.html, right after <body> or at the top of content -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div style="position: fixed; top: 20px; right: 20px; z-index: 1000; max-width: 300px;">
+            {% for category, message in messages %}
+                <div style="
+                    background: {{ '#4CAF50' if category == 'success' else ('#ff9800' if category == 'warning' else '#f44336') }};
+                    color: white;
+                    padding: 15px;
+                    margin-bottom: 10px;
+                    border-radius: 5px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                    animation: slideIn 0.3s ease-out;
+                ">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        <style>
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        </style>
+    {% endif %}
+{% endwith %}
 </html>
