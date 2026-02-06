@@ -9,5 +9,5 @@
 chmod +x connectdb.sh
 
 # 3. Run setup SQL and dummy data on the chosen DB
-./connectdb.sh < setup.sql
+./setup/connectdb.sh < ./setup/setup.sql
 # ./connectdb.sh < dummy_data.sql
