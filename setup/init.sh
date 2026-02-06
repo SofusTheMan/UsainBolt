@@ -6,7 +6,7 @@
 # ./createdotenv.sh
 
 # 2. Make sure connectdb.sh is executable
-chmod +x connectdb.sh
+chmod +x setup/connectdb.sh
 
 # 3. Run setup SQL and dummy data on the chosen DB
 ./setup/connectdb.sh < ./setup/setup.sql
