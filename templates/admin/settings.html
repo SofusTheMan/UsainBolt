@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>⚙️ Site Settings</h2>
+
+<form method="POST">
+    <div style="margin-bottom: 20px;">
+        <label for="goal">Progress Goal (Total Meters):</label>
+        <input type="number" 
+               id="goal" 
+               name="goal" 
+               value="{{ config.goal }}" 
+               min="1" 
+               required 
+               style="width: 150px;">
+        <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
+            This sets the target for the progress bar on the home page.
+        </p>
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+        <button type="submit">💾 Save Settings</button>
+        <a href="{{ url_for('admin_dashboard') }}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+</form>
+
+<hr style="margin: 30px 0;">
+
+<h3>Current Statistics</h3>
+<div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
+    <p><strong>Current Progress:</strong> {{ current_runs }} / {{ config.goal }} meters</p>
+    <p><strong>Completion:</strong> {{ "%.1f"|format((current_runs / config.goal * 100) if config.goal > 0 else 0) }}%</p>
+</div>
+
+{% endblock %}

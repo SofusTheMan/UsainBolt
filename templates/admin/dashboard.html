@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Admin Dashboard ⚙️</h2>
-
+<a href="{{ url_for('admin_settings') }}">
+    <button type="button">⚙️ Site Settings</button>
+</a>
 <h3>👤 Users</h3>
 <table border="1">
     <tr>

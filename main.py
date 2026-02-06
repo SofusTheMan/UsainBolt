@@ -6,6 +6,17 @@ import os, hashlib, hmac
 from pathlib import Path
 import mimetypes
 from functools import wraps
+import json
+
+CONFIG_FILE = Path("config.json")
+
+def get_config():
+    if CONFIG_FILE.exists():
+        return json.loads(CONFIG_FILE.read_text())
+    return {"goal": 100}
+
+def save_config(config):
+    CONFIG_FILE.write_text(json.dumps(config, indent=2))
 
 # naive loader (or use python-dotenv to load .env into os.environ)
 def load_env_to_os(path=Path(".env")):
@@ -30,11 +41,9 @@ app.secret_key = 'your_secret_key'
 
 @app.route("/")
 def index():
-    # total runs
+    config = get_config()
     total_runs = psql("SELECT COUNT(*) FROM runs;")[0][0]
-    goal = 10
-
-    return render_template("index.html", total_runs=total_runs, goal=goal)
+    return render_template("index.html", total_runs=total_runs, goal=config["goal"])
 
 
 @app.route("/info")
@@ -82,6 +91,20 @@ def admin_logout():
     flash("👋 Logged out!", "info")
     return redirect(url_for("index"))
 
+@app.route("/admin/settings", methods=["GET", "POST"])
+@admin_required
+def admin_settings():
+    if request.method == "POST":
+        new_goal = int(request.form.get("goal"))
+        config = get_config()
+        config["goal"] = new_goal
+        save_config(config)
+        flash("✅ Goal updated!", "success")
+        return redirect(url_for("admin_dashboard"))
+    
+    config = get_config()
+    current_runs = psql("SELECT COUNT(*) FROM runs;")[0][0]
+    return render_template("admin/settings.html", config=config, current_runs=current_runs)
 # -----------------------
 # DELETE USER (and runs)
 # -----------------------
@@ -108,12 +131,17 @@ def edit_user(user_id):
         remove_picture = request.form.get("remove_picture")
         
         if new_username != psql("SELECT username FROM users WHERE user_id = %s;", (user_id,))[0]['username']:
-            psql(
-                "UPDATE users SET username=%s, username_lower=LOWER(%s) WHERE user_id=%s;",
-                (new_username, new_username, user_id),
-                fetch=False,
-            )
-            flash("✅ Username updated.", "success")
+            if psql("SELECT user_id FROM users WHERE username = %s", (new_username,)) == []:
+            
+                psql(
+                    "UPDATE users SET username=%s, username_lower=LOWER(%s) WHERE user_id=%s;",
+                    (new_username, new_username, user_id),
+                    fetch=False,
+                )
+                flash("✅ Username updated.", "success")
+            else:
+                flash("❌ Username is already taken.", "fail")
+
         
         # Handle profile picture upload
         if profile_picture and profile_picture.filename:
@@ -166,7 +194,7 @@ def edit_run(run_id):
         video_file = request.files.get("video")
         
         # Get current run info
-        current_run = psql("SELECT user_id FROM runs WHERE run_id = %s;", (run_id,))[0]
+        current_run = psql("SELECT description, time_seconds, user_id FROM runs WHERE run_id = %s;", (run_id,))[0]
         
         # Check if user exists (case-insensitive)
         user = psql("SELECT user_id FROM users WHERE username_lower = LOWER(%s);", (username,))
