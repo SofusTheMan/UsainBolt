@@ -12,6 +12,6 @@
 # ./setup/connectdb.sh < ./setup/setup.sql
 # ./connectdb.sh < dummy_data.sql
 
-psql $DATABASE_URL -f setup.sql
+psql "$DATABASE_URL" -f setup.sql
 
 
