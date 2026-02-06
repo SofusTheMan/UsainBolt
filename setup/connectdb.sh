@@ -2,7 +2,7 @@
 
 # Load variables from .env
 if [ -f ./../.env ]; then
-  export $(cat ./../.env | xargs)
+  export $(cat ./.env | xargs)
 else
   echo ".env file not found. Run ./createdotenv.sh first."
   exit 1
