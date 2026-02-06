@@ -3,7 +3,7 @@
 #pip install -r requirements.txt
 
 # 1. Create .env file
-# ./createdotenv.sh
+./setup/createdotenv.sh
 
 # 2. Make sure connectdb.sh is executable
 chmod +x setup/connectdb.sh
